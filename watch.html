@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PakMeow</title>
+    <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dy1fqwyap/image/upload/v1747581790/lqlxt9haksltkyksnfqx.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/artplayer/dist/artplayer.css" />
+    <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://artplayer.org/uncompiled/artplayer-plugin-auto-thumbnail/index.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="watch.css">
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo-link">
+            <img src="https://res.cloudinary.com/dy1fqwyap/image/upload/v1747580585/oa4qfvxxcfsklj1de5hl.png" alt="YouTube Logo" class="logo">
+        </a>        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search videos...">
+            <button class="search-button"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="user-actions">
+            <button class="theme-toggle" id="themeToggle" title="Toggle Theme"><i class="material-symbols-outlined">dark_mode</i></button>
+            <img id="userAvatar" class="user-avatar" src="https://placehold.co/32x32?text=U" alt="User Avatar" style="display: none;">
+            <button id="signInButton">Sign In</button>
+            <button id="uploadButton">Upload</button>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="video-player-container">
+            <div id="artplayer"></div>
+            <div class="video-info">
+                <h2 class="video-title" id="videoTitle">Loading...</h2>
+                <div class="video-actions">
+                    <button id="likeButton"><i class="fas fa-thumbs-up"></i> <span id="likeCount">0</span></button>
+                    <button id="dislikeButton"><i class="fas fa-thumbs-down"></i> <span id="dislikeCount">0</span></button>
+                    <button id="shareButton"><i class="fas fa-share"></i> Share</button>
+                </div>
+                <div class="uploader-info">
+    <img id="uploaderAvatar" class="uploader-avatar" src="https://placehold.co/36x36?text=U" alt="Uploader Avatar">
+    <a href="#" id="uploaderNameLink" class="uploader-name">Unknown</a>
+</div>
+                <div class="video-meta">
+                    <span id="uploadDate">Unknown</span> • <span id="viewCount">0</span> views
+                </div>
+                <div class="video-description">
+                    <div id="descriptionText" class="description-text">No description</div>
+                    <button id="toggleDescription" class="toggle-description" style="display: none;">Show More <i class="fas fa-chevron-down"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="related-videos">
+            <h3>Related Videos</h3>
+            <div id="relatedVideos">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="authClose">×</span>
+            <h2 id="authTitle">Sign In</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group" id="displayNameGroup" style="display: none;">
+                    <label for="displayName">Display Name</label>
+                    <input type="text" id="displayName" placeholder="Enter your display name" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group" id="photoGroup" style="display: none;">
+                    <label for="photoUpload">Profile Photo</label>
+                    <button type="button" id="photoUpload" class="cloudinary-button">Upload Photo</button>
+                    <input type="hidden" id="photoUrl" required>
+                </div>
+                <button type="submit" id="authSubmit">Sign In</button>
+            </form>
+            <p class="auth-toggle" id="authToggle">
+                Don't have an account? <a href="#" id="toggleLink">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="uploadClose">×</span>
+            <h2>Upload Video</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="videoTitle">Title</label>
+                    <input type="text" id="videoTitle" placeholder="Enter video title" required>
+                </div>
+                <div class="form-group">
+                    <label for="videoDescription">Description</label>
+                    <textarea id="videoDescription" placeholder="Enter video description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="videoUrl">Video URL</label>
+                    <input type="url" id="videoUrl" placeholder="Enter video URL" required>
+                </div>
+                <div class="form-group">
+                    <label for="thumbnailUrl">Thumbnail URL (optional)</label>
+                    <input type="url" id="thumbnailUrl" placeholder="Enter thumbnail URL">
+                </div>
+                <button type="submit">Upload Video</button>
+            </form>
+        </div>
+    </div>
+        <script src="watch.js"></script>
+</body>
+</html>
