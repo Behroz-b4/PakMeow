@@ -1,4 +1,4 @@
-PakMeow is a video platform that allows users to watch and upload videos, similar to platforms like YouTube, Dailymotion, and Bilibili. It provides a user-friendly interface for content creators to share their videos and for viewers to discover, stream, and engage with a wide variety of content.
+<h3>PakMeow is a video platform that allows users to watch and upload videos, similar to platforms like YouTube, Dailymotion, and Bilibili. It provides a user-friendly interface for content creators to share their videos and for viewers to discover, stream, and engage with a wide variety of content.</h3>
 <h2>Step 1: Create Firebase Account</h2>
 <h4>1. Create Authentication with email and password.</h4>
 <h4>2. Create Firestore Database and rules below: </h4>
